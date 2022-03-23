@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+       body{
+        background-color: #363535;
+        font-family:Arial, Helvetica, sans-serif;
+       }
+       #search{
+           padding: 10px 30px;
+       }
+        #search_results{
+            border-top: .1px solid rgb(100, 99, 99);
+            margin: 20px 20px;
+            padding-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(4,25%);
+            grid-gap: 15px;
+        }
+        #search_results >div{
+            /* border: 1px solid rgb(146, 144, 144); */
+            color: rgb(219, 215, 215)
+        }
+        #d2{
+            /* border: 1px solid green; */
+            display: flex;
+            justify-content: center;
+            height: 60px;
+            box-sizing: border-box;
+        }
+        #d2 > input, #d2 > button{
+            margin: 10px 0px;
+        }
+        #d2 > input{
+            width: 500px;
+            background:rgb(43, 42, 42);
+            border: none;
+            color: rgb(219, 215, 215);
+            
+        }
+        
+        #d2 > #btn ,#d2 >i{
+            background:none;
+            border: none;            
+            font-size:25px;            
+            position: absolute;
+            margin-left: 510px;
+            margin-top: 15px;
+            color:rgb(209, 205, 205);
+            
+        }
+        #d2 >i{
+            margin-left: 610px;
+            background-color: black;
+            border-radius: 50%;
+            border: 10px solid black;
+            margin-top: 7px;
+        }
+       
+        #nav{
+            display:flex;
+            justify-content: space-between;
+            height:50px;
+            /* border: 2px solid red; */
+        }
+        #d1{
+            /* border: 1px solid green; */
+
+            color:rgb(209, 205, 205);
+            align-items: center;
+            font-size: 20px;
+            display:flex;
+           
+        }
+        #d1 >img{     
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            object-fit: cover;
+            height: 50px;
+            width: 150px;
+            margin-left: 10px;
+        }
+        #d3 >img{ 
+            /* border:2px solid rgb(238, 236, 236); */
+            
+            /* border:1px solid blue; */
+            border-radius: 50%;
+            width: 25%;
+            margin-top: 5px;
+        }
+        #d3{
+            /* border: 1px solid green; */
+            text-align: center;
+        }
+        #d3 > i{
+            margin: auto;
+            font-size:25px;  
+            margin: 0px 10px;           
+        }
+       
+
+    </style>
+</head>
+<body>
+    <div id="nav" >
+        <div id="d1">
+            <i class="fa-solid fa-bars"></i>
+            <img src="https://play-lh.googleusercontent.com/vA4tG0v4aasE7oIvRIvTkOYTwom07DfqHdUPr6k7jmrDwy_qA_SonqZkw6KX0OXKAdk" alt="youtube">
+        </div>
+        <div id="d2">
+            <input type="text" id="search" placeholder="Search"/>
+            <button id="btn"  onclick="searchVideos()"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <i class="fa-solid fa-microphone"></i>
+        </div>
+        <div id="d3">
+            <i class="fa-solid fa-video"></i>
+            <i class="fa-solid fa-grip"></i>
+            <i class="fa-regular fa-bell"></i>
+            <!-- <i class="fa-solid fa-user"></i> -->
+            <img src="https://cdn.imgbin.com/3/12/17/imgbin-computer-icons-avatar-user-login-avatar-man-wearing-blue-shirt-illustration-mJrXLG07YnZUc2bH5pGfFKUhX.jpg" alt="" height="40px">
+        </div>
+    </div>
+
+    <div id="search_results"></div>
+</body>
+</html>
+
+<script>
+
+// AIzaSyBkV2EZGjdg48nqBMEpXiw8Yjy2udKPCps
+
+//https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=cricket&key=AIzaSyBkV2EZGjdg48nqBMEpXiw8Yjy2udKPCps HTTP/1.1
+
+// AIzaSyCWmsjslHkf5HrCvKjkSL-G89v3inCk-18
+
+let key = "AIzaSyAMJKHxFhk-ze5ft06DY1NgvIa-EMIxsrY";
+
+const searchVideos = async () => {
+    try {
+        
+        let inp = document.getElementById("search").value;
+
+        let res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${inp}&key=AIzaSyCQ3w2YERzQS06HlhxxXJRIthuGxLQHQe4&maxResults=20`)
+        let data = await res.json();
+        let videos =data.items;
+        
+        console.log(videos);
+        appendVideos(videos);
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+const appendVideos =  (maindata) => {
+
+    document.getElementById("search_results").innerHTML=null;
+
+    maindata.forEach(({snippet :{title}, id:{videoId}, snippet})=> {
+
+        let div = document.createElement('div');
+
+        let name = document.createElement('p');
+        name.innerHTML =title;
+
+        let pic=document.createElement('img');
+        pic.src =snippet.thumbnails.medium.url;
+
+        let iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+
+        div.append(pic,title);
+        document.getElementById("search_results").append(div);
+
+        div.addEventListener("click", ()=>{
+            window.location.href=`https://www.youtube.com/embed/${videoId}`
+        })
+
+        // [0].id.videoId
+        
+    });
+}
+
+// [0].snippet.thumbnails.high.url
+// Embed url -https://www.youtube.com/embed/6k7FwQOAuIc
+
+
+
+
+async function showVideo(){
+    try {
+
+        //AIzaSyAMJKHxFhk-ze5ft06DY1NgvIa-EMIxsrY
+
+        let res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&key=AIzaSyCQ3w2YERzQS06HlhxxXJRIthuGxLQHQe4&maxResults=20`)
+        let data = await res.json();
+        let videos =data.items;
+        
+        console.log(videos);
+        append(videos);
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+showVideo();
+
+const append =  (maindata) => {
+
+document.getElementById("search_results").innerHTML=null;
+
+maindata.forEach(({snippet :{title}, id:{videoId}, snippet})=> {
+
+    let div = document.createElement('div');
+
+    let name = document.createElement('p');
+    name.innerHTML =title;
+
+    let pic=document.createElement('img');
+    pic.src =snippet.thumbnails.medium.url;
+
+    let iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}`;
+
+    div.append(pic,title);
+    document.getElementById("search_results").append(div);
+
+    div.addEventListener("click", ()=>{
+        window.location.href=`https://www.youtube.com/embed/${videoId}`
+    })
+
+    // [0].id.videoId
+    
+});
+}
+</script>
